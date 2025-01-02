@@ -2,14 +2,14 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:cure/features/audio/model.dart';
-import 'package:cure/features/audio/presentation/bloc/audio_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../services/subjects/handle_model.dart';
+import '../../model.dart';
 import '../../services.dart';
 import 'audio_event.dart';
+import 'audio_state.dart';
 
 class AudioBloc extends Bloc<AudioBEvent, AudioState> {
  AudioBloc() : super(AudioLoading()) {

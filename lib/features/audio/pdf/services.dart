@@ -16,7 +16,7 @@ abstract class PdfService extends Service {
 
 class PdfServiceImp extends PdfService {
   @override
-  Future<DataSuccessObject<PdfModel>> getPdf(int id) async {
+  Future<DataSuccessObject<PdfModel>> getPdf(int? id) async {
     try {
       final response = await dio.get("${AppUrl.baseUrl}${AppUrl.pdf}$id",
           options: HeaderConfig.getHeader(useToken: true));

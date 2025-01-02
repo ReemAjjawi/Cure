@@ -63,7 +63,7 @@ class _Page1State extends State<Page1> {
                     ),
                     SizedBox(height: 0.06 * screenHeight),
                     SizedBox(
-                      height: 0.06 * screenHeight,
+                      height: 0.075 * screenHeight,
                       child: TextFormField(
                         controller: phone,
                         keyboardType: TextInputType.number,
@@ -101,7 +101,7 @@ class _Page1State extends State<Page1> {
                     ),
                     SizedBox(height: 0.06 * screenHeight),
                     SizedBox(
-                      height: 0.06 * screenHeight,
+                      height: 0.075 * screenHeight,
                       child: ValueListenableBuilder<bool>(
                           valueListenable: isObscuredNotifier,
                           builder: (context, isObscured, child) {
@@ -147,9 +147,9 @@ class _Page1State extends State<Page1> {
                     BlocConsumer<LoginBloc, LogInClassState>(
                       listener: (context, state) {
                         if (state is LogInSuccessState) {
-                          Navigator.push(context,
+                          Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) {
-                            return Subjects();
+                            return const Subjects();
                           }));
                         } else if (state is LogInFailureState) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -178,7 +178,7 @@ class _Page1State extends State<Page1> {
                                 context.read<LoginBloc>().add(LogInEvent(
                                     LogInModel(
                                         phone_number: phone.text,
-                                        password: "00-B0-D0-63-C2-26",
+                                        password: deviceId,
                                         code: code.text)));
                               }
                             },
@@ -194,45 +194,41 @@ class _Page1State extends State<Page1> {
                         } else if (state is LogInSuccessState) {
                           return const SizedBox();
                         } else {
-                         return 
-                            
-                            
-                            SizedBox(
-                        height: 300,
-                        child: Column(
-                          children: [
-                           ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: ColorsManager.secondaryColor,
-                              minimumSize: Size(
-                                0.8 * screenWidth,
-                                0.065 * screenHeight,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
+                          return SizedBox(
+                            height: 300,
+                            child: Column(
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        ColorsManager.secondaryColor,
+                                    minimumSize: Size(
+                                      0.8 * screenWidth,
+                                      0.065 * screenHeight,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    if (formKey.currentState!.validate()) {
+                                      context.read<LoginBloc>().add(LogInEvent(
+                                          LogInModel(
+                                              phone_number: phone.text,
+                                              password: deviceId,
+                                              code: code.text)));
+                                    }
+                                  },
+                                  child: Text(
+                                    "تسجيل الدخول",
+                                    style: TextStyle(
+                                      color: ColorsManager.loginColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                context.read<LoginBloc>().add(LogInEvent(
-                                    LogInModel(
-                                        phone_number: phone.text,
-                                        password: "00-B0-D0-63-C2-26",
-                                        code: code.text)));
-                              }
-                            },
-
-                            child: Text(
-                              "تسجيل الدخول",
-                              style: TextStyle(
-                                color: ColorsManager.loginColor,
-                              ),
-                            ),
-                          ),
-
-                          ],
-                        ),
-                      );
+                          );
                         }
                       },
                     ),

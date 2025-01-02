@@ -3,7 +3,7 @@ import 'dart:convert';
 
 class LogInModel {
   String phone_number;
-  String password;
+  String? password;
   String code;
   LogInModel({
     required this.phone_number,
@@ -41,19 +41,20 @@ class LogInModel {
 
   String toJson() => json.encode(toMap());
 
-  factory LogInModel.fromJson(String source) => LogInModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory LogInModel.fromJson(String source) =>
+      LogInModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'LogInModel(phone_number: $phone_number, password: $password, code: $code)';
+  String toString() =>
+      'LogInModel(phone_number: $phone_number, password: $password, code: $code)';
 
   @override
   bool operator ==(covariant LogInModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.phone_number == phone_number &&
-      other.password == password &&
-      other.code == code;
+
+    return other.phone_number == phone_number &&
+        other.password == password &&
+        other.code == code;
   }
 
   @override

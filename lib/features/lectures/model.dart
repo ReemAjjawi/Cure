@@ -1,16 +1,25 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'dart:convert';
+import 'package:hive/hive.dart';
+
+@HiveType(typeId: 0) // Ensure a unique typeId for each model
 
 class LectureModel {
+
+  @HiveField(0)
   int id;
+
+  @HiveField(1)
   String name;
+
+  @HiveField(2)
   int subject_id;
+
   LectureModel({
     required this.id,
     required this.name,
     required this.subject_id,
   });
-
   LectureModel copyWith({
     int? id,
     String? name,

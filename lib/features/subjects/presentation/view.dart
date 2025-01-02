@@ -18,7 +18,7 @@ class _SubjectsState extends State<Subjects> {
 
   @override
   Widget build(BuildContext context) {
-       screenWidth = MediaQuery.sizeOf(context).width;
+    screenWidth = MediaQuery.sizeOf(context).width;
     screenHeight = MediaQuery.sizeOf(context).height;
 
     return BlocProvider(
@@ -32,14 +32,16 @@ class _SubjectsState extends State<Subjects> {
                   horizontal: screenHeight * 0.02,
                   vertical: screenHeight * 0.05),
               child: Column(children: [
-                 Align(
+                Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
                       " المقررات",
-                      style:
-                          TextStyle(color: ColorsManager.loginColor,fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: ColorsManager.loginColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -51,6 +53,69 @@ class _SubjectsState extends State<Subjects> {
                         content: Text(state.message),
                         duration: const Duration(seconds: 5),
                       ));
+                    } else if (state is SuccessAddCode) {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const Subjects();
+                      }));
+                      showModalBottomSheet(
+                        isScrollControlled:
+                            true, // Allows the modal to adjust height dynamically
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(40.0),
+                          ),
+                        ),
+                        backgroundColor: ColorsManager.secondaryColor,
+                        builder: (context) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context)
+                                  .viewInsets
+                                  .bottom, // Adjusts for the keyboard
+                            ),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical: 12.0,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "تم إضافة المواد بنجاح !",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: ColorsManager.loginColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(
+                                    thickness: 1,
+                                    color: ColorsManager.loginColor,
+                                  ),
+                                  const SizedBox(height: 16.0),
+                                  Container(
+                                    height: 200,
+                                    decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/images/onlys.png"),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 24.0),
+                               ///   const SizedBox(height: 24.0),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
                     }
                   },
                   builder: (context, state) {
@@ -58,7 +123,7 @@ class _SubjectsState extends State<Subjects> {
                       return const Align(
                           alignment: Alignment.bottomCenter,
                           child: Indicator());
-                    } else {
+                    } else if (state is SubjectsList) {
                       return Expanded(
                         child: ListView.builder(
                           itemBuilder: (context, index) {
@@ -69,7 +134,7 @@ class _SubjectsState extends State<Subjects> {
                                   return Lectures(
                                       subjectName:
                                           (state).subjects[index].name!,
-                                      subjectId: index + 1);
+                                      subjectId: (state).subjects[index].id);
                                 }));
                               },
                               child: Padding(
@@ -95,7 +160,8 @@ class _SubjectsState extends State<Subjects> {
                                       ),
                                     ),
                                     title: Text(
-                                      (state).subjects[index].name!, textAlign: TextAlign.end,
+                                      (state).subjects[index].name!,
+                                      textAlign: TextAlign.end,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: ColorsManager.primaryColor,
@@ -106,36 +172,23 @@ class _SubjectsState extends State<Subjects> {
                                       color: ColorsManager.primaryColor,
                                       size: 26,
                                     ),
-                                    subtitle: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Padding(
-  padding: EdgeInsets.only(
-                                                    left: screenWidth * 0.09),                                            child: Text(
-                                              "ميغا500",
-                                              style: TextStyle(
-                                                  color: ColorsManager.grayColor),
-                                            ),
-                                          ),
-                                          // const Spacer(),
-                                          Text(" 7 ساعات",
-                                              style: TextStyle(
-                                                  color:
-                                                      ColorsManager.grayColor)),
-                                        ],
-                                      ),
-                                    ),
+                                    subtitle: Text(
+                                        ' ${state.subjects[index].countOfLectures} عدد المحاضرات',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            color: ColorsManager.grayColor)),
                                   ),
                                 ),
                               ),
                             );
                           },
-                          itemCount: (state as SubjectsList).subjects.length,
+                          itemCount: (state).subjects.length,
                         ),
                       );
+                    } else if (state is FailureSubjectsState) {
+                      return Text(state.message);
+                    } else {
+                      return const SizedBox();
                     }
                   },
                 )
@@ -148,162 +201,117 @@ class _SubjectsState extends State<Subjects> {
               backgroundColor: ColorsManager.priaryBColor,
               onPressed: () {
                 showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
+                  isScrollControlled:
+                      true, // Allows the modal to adjust its height for the keyboard
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
                       top: Radius.circular(40.0),
-                    )),
-                    backgroundColor: ColorsManager.secondaryColor,
-                    builder: (context) {
-                      return Form(
-                        child: SingleChildScrollView(
+                    ),
+                  ),
+                  backgroundColor: ColorsManager.secondaryColor,
+                  builder: (_) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context)
+                            .viewInsets
+                            .bottom, // Avoids keyboard overlap
+                      ),
+                      child: SingleChildScrollView(
+                        child: Form(
                           child: Column(
-                            //    crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisSize: MainAxisSize
+                                .min, // Ensures the modal adapts to its content
                             children: [
                               Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: screenHeight * 0.01,
-                                      vertical: screenHeight * 0.02),
-                                  child: Center(
-                                    child: Text(
-                                      "الرجاء إدخال الكود الجديد",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: ColorsManager.loginColor),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: screenHeight * 0.01,
+                                  vertical: screenHeight * 0.02,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "الرجاء إدخال الكود الجديد",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      color: ColorsManager.loginColor,
                                     ),
-                                  )),
+                                  ),
+                                ),
+                              ),
                               Divider(
                                 thickness: 1,
                                 color: ColorsManager.loginColor,
                               ),
-                              SizedBox(
-                                height: 0.02 * screenHeight,
-                              ),
+                              SizedBox(height: 0.02 * screenHeight),
                               Padding(
                                 padding: const EdgeInsets.all(18.0),
-                                child:    SizedBox(
-                      height: 0.06 * screenHeight,
-                      child: TextFormField(
-                        controller: newCode,
-                    
-                        cursorColor: ColorsManager.secondaryBColor,
-                        decoration: InputDecoration(
-                          hintTextDirection: TextDirection.rtl,
-                        
-                          hintStyle: TextStyle(color: Colors.black),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: ColorsManager.BorderColorNewCode,
-                              )),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: ColorsManager.BorderColorNewCode,
-                              )),
-                          hoverColor: ColorsManager.secondaryBColor,
-                        ),
-                   
-                      ),
+                                child: SizedBox(
+                                  height: 0.076 * screenHeight,
+                                  width: 0.8 * screenWidth,
+                                  child: TextFormField(
+                                    controller: newCode,
+                                    cursorColor: ColorsManager.secondaryBColor,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      hintTextDirection: TextDirection.rtl,
+                                      hintStyle:
+                                          const TextStyle(color: Colors.black),
+                                      disabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color:
+                                              ColorsManager.BorderColorNewCode,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color:
+                                              ColorsManager.BorderColorNewCode,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                              SizedBox(
-                                height: screenHeight * 0.05,
-                              ),
+                              SizedBox(height: screenHeight * 0.05),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 13.0),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     side: BorderSide(
-                                        color: ColorsManager.BorderStudentColor,
-                                        width: 1),
+                                      color: ColorsManager.BorderStudentColor,
+                                      width: 1,
+                                    ),
                                     backgroundColor: ColorsManager.priaryBColor,
                                     minimumSize: Size(
                                       0.8 * screenWidth,
                                       0.06 * screenHeight,
-                                    ), // Set minimum width and height
-                                    // primary: Colors.blue, // Background color
+                                    ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          10.0), // Change the radius here
+                                      borderRadius: BorderRadius.circular(10.0),
                                     ),
                                   ),
                                   onPressed: () {
                                     Navigator.pop(context);
 
-                                    context.read<SubjectsBloc>().add(
-                                        AddCodeToUser(
-                                               code: newCode.text
-                                           ));
-
-                          
-
-                                    showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        context: context,
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(40.0),
-                                        )),
-                                        backgroundColor:
-                                            ColorsManager.secondaryColor,
-                                        builder: (context) {
-                                          return SingleChildScrollView(
-                                            child: Column(
-                                              //    crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal:
-                                                                screenHeight *
-                                                                    0.01,
-                                                            vertical:
-                                                                screenHeight *
-                                                                    0.02),
-                                                    child: Center(
-                                                      child: Text(
-                                                        "تم إضافة المواد بنجاح ! ",
-                                                        style: TextStyle(
-                                                            fontSize: 18,
-                                                            color: ColorsManager
-                                                                .loginColor),
-                                                      ),
-                                                    )),
-                                                Divider(
-                                                  thickness: 1,
-                                                  color:
-                                                      ColorsManager.loginColor,
-                                                ),
-                                                SizedBox(
-                                                  height: 0.06 * screenHeight,
-                                                ),
-                                                Container(
-                                                  height: screenHeight / 8,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    image: DecorationImage(
-                                                        image: AssetImage(
-                                                            "assets/images/onlys.png")),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 0.1 * screenHeight,
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        });
-                                    // Your onPressed action here
+                                    context
+                                        .read<SubjectsBloc>()
+                                        .add(AddCodeToUser(code: newCode.text));
+                                    newCode.clear();
                                   },
                                   child: Text(
                                     "التحقق",
                                     style: TextStyle(
-                                        color: ColorsManager.loginColor),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w300,
+                                      color: ColorsManager.loginColor,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -321,15 +329,18 @@ class _SubjectsState extends State<Subjects> {
                                     Icon(
                                       Icons.call,
                                       color: ColorsManager.loginColor,
-                                    )
+                                    ),
                                   ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
-                      );
-                    });
+                      ),
+                    );
+                  },
+                );
+
                 // Your onPressed action here
               },
               // Your onPressed action here
@@ -347,5 +358,11 @@ class _SubjectsState extends State<Subjects> {
         );
       }),
     );
+  }
+
+  @override
+  void dispose() {
+    newCode.dispose(); // Dispose of the player when no longer needed
+    super.dispose();
   }
 }

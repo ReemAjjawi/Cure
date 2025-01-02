@@ -1,32 +1,30 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:hive_flutter/hive_flutter.dart';
 
+
+@HiveType(typeId: 1) // Unique typeId for this model
 class SubjectModel {
-  int? id;
+  @HiveField(0)
+  int id;
+
+  @HiveField(1)
   String? name;
+
+  @HiveField(2)
   String? type;
+
+  @HiveField(3)
   int countOfLectures;
+
   SubjectModel({
-    this.id,
+    required this.id,
     this.name,
     this.type,
     required this.countOfLectures,
   });
 
-  SubjectModel copyWith({
-    int? id,
-    String? name,
-    String? type,
-    int? countOfLectures,
-  }) {
-    return SubjectModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      type: type ?? this.type,
-      countOfLectures: countOfLectures ?? this.countOfLectures,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -39,7 +37,7 @@ class SubjectModel {
 
   factory SubjectModel.fromMap(Map<String, dynamic> map) {
     return SubjectModel(
-      id: map['id'] != null ? map['id'] as int : null,
+      id: map['id'] as int,
       name: map['name'] != null ? map['name'] as String : null,
       type: map['type'] != null ? map['type'] as String : null,
       countOfLectures: map['countOfLectures'] as int,
