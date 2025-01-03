@@ -1,13 +1,11 @@
 import 'package:bloc/bloc.dart';
-import 'package:cure/features/auth/model.dart';
 import 'package:cure/features/auth/presentation/bloc/login_event.dart';
 import 'package:cure/features/auth/presentation/bloc/login_state.dart';
-import 'package:cure/features/auth/response_model.dart';
-import 'package:cure/services/subjects/handle_model.dart';
+import 'package:cure/config/handle_model.dart';
 import 'package:dio/dio.dart';
 import 'package:hive_flutter/adapters.dart';
 
-import '../../services.dart';
+import '../../service.dart';
 
 class LoginBloc extends Bloc<LogInClassEvent, LogInClassState> {
   LoginBloc() : super(InitialStateLogIn()) {
@@ -30,20 +28,3 @@ class LoginBloc extends Bloc<LogInClassEvent, LogInClassState> {
     });
   }
 }
-
-// class LoginBloc extends Bloc<LogInClassEvent, LogInClassState> {
-//   LoginBloc() : super(InitialStateLogIn()) {
-//     on<LogInEvent>((event, emit) async {
-//       var box = Hive.box('projectBox');
-//       emit(LogInLoadingState());
-//       SuccessSituation response = await AuthServiceImp().LogIn(event.user);
-//       try {
-//         if (box.get('token') != '') {
-//           emit(LogInSuccessState());
-//         } 
-//       } on DioException catch (e) {
-//         emit(LogInFailureState(message: e.message!));
-//       }
-//     });
-//   }
-// }

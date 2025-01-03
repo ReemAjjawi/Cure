@@ -1,5 +1,6 @@
 
-import '../../model.dart';
+
+import '../../models/request/model.dart';
 
 sealed class LogInClassEvent {}
 

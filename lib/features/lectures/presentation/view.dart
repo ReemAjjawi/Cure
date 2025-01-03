@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/resources/managers/colors_manager.dart';
-import '../../audio/presentation/view.dart';
+import '../../audio_pdf/view.dart';
 import 'bloc/lectures_bloc.dart';
 
 class Lectures extends StatelessWidget {

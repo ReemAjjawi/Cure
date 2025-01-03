@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:cure/services/subjects/handle_model.dart';
+import 'package:cure/config/handle_model.dart';
 import 'package:dio/dio.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meta/meta.dart';
 
-import '../../model.dart';
-import '../../services.dart';
+import '../../lecture_model.dart';
+import '../../service.dart';
 
 part 'lectures_event.dart';
 part 'lectures_state.dart';
@@ -31,21 +31,20 @@ class LecturesBloc extends Bloc<LecturesEvent, LecturesState> {
             emit(FailureLecturesState(
                 message: "No internet and no saved lectures available."));
           }
-          return;
-        }
+        } else {
+          // Internet is available: fetch lectures from the server
+          SuccessSituation response =
+              await LectureServiceImp().getLectures(event.numberOfLecture);
 
-        // Internet is available: fetch lectures from the server
-        SuccessSituation response =
-            await LectureServiceImp().getLectures(event.numberOfLecture);
+          if (response is DataSuccessList<LectureModel>) {
+            // Save lectures to Hive for the given subject
 
-        if (response is DataSuccessList<LectureModel>) {
-          // Save lectures to Hive for the given subject
-
-          await saveLectures(
-              "${event.numberOfLecture}".toString(), response.data);
-          print("t3bttttttttttttttttttttttttttttt");
-          print(response.data);
-          emit(LecturesList(lectures: response.data));
+            await saveLectures(
+                "${event.numberOfLecture}".toString(), response.data);
+            print("t3bttttttttttttttttttttttttttttt");
+            print(response.data);
+            emit(LecturesList(lectures: response.data));
+          }
         }
       } on DioException catch (e) {
         emit(FailureLecturesState(
@@ -57,7 +56,8 @@ class LecturesBloc extends Bloc<LecturesEvent, LecturesState> {
 
 Future<List<LectureModel>> getSavedLectures(String subjectId) async {
   final box = await Hive.openBox('lecturesBox');
-  final savedLectures = box.get(subjectId, defaultValue: []) as List<LectureModel>;
+  final savedLectures =
+      box.get(subjectId, defaultValue: []) as List<LectureModel>;
   return savedLectures; // Remove any null values
 }
 

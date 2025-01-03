@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:cure/features/subjects/services.dart';
-import 'package:cure/services/subjects/handle_model.dart';
+import 'package:cure/features/subjects/service.dart';
+import 'package:cure/config/handle_model.dart';
 import 'package:dio/dio.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meta/meta.dart';
 
-import '../../model.dart';
+import '../../subject_model.dart';
 
 part 'subjects_event.dart';
 part 'subjects_state.dart';
@@ -31,25 +31,21 @@ class SubjectsBloc extends Bloc<SubjectsEvent, SubjectsState> {
             emit(FailureSubjectsState(
                 message: "No internet and no saved subjects available."));
           }
-  
-        }
-
-        // Internet is available, fetch subjects from the server
-        print("Fetching subjects from the server...");
-        SuccessSituation response = await SubjectServiceImp().getSubjects();
-        if (response is DataSuccessList<SubjectModel>) {
-          print("Fetched ${response.data.length} subjects from the server.");
-          // Save subjects to Hive
-          await saveSubjects(response.data);
-          emit(SubjectsList(subjects: response.data));
+        } else {
+          // Internet is available, fetch subjects from the server
+          print("Fetching subjects from the server...");
+          SuccessSituation response = await SubjectServiceImp().getSubjects();
+          if (response is DataSuccessList<SubjectModel>) {
+            print("Fetched ${response.data.length} subjects from the server.");
+            // Save subjects to Hive
+            await saveSubjects(response.data);
+            emit(SubjectsList(subjects: response.data));
+          }
         }
       } on DioException catch (e) {
         print("DioException: ${e.message}");
         emit(FailureSubjectsState(
             message: e.message ?? "Failed to fetch subjects."));
-      } catch (e) {
-        print("Unexpected error: $e");
-        emit(FailureSubjectsState(message: "An unexpected error occurred."));
       }
     });
 

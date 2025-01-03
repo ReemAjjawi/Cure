@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'config/bloc_observe_config.dart';
-import 'features/audio/adapter.dart';
-import 'features/lectures/adapter.dart';
-import 'features/subjects/adapter.dart';
+import 'core/adapters/lecture_information_model_adapter.dart';
+import 'core/adapters/lecture_model_adapter.dart';
+import 'core/adapters/subject_model_adapter.dart';
 import 'features/subjects/presentation/view.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 

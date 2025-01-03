@@ -1,4 +1,3 @@
-import 'package:cure/features/auth/model.dart';
 import 'package:cure/features/auth/presentation/bloc/login_bloc.dart';
 import 'package:cure/features/auth/presentation/bloc/login_state.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/helper/indicator.dart';
 import '../../../main.dart';
 import '../../subjects/presentation/view.dart';
+import '../models/request/model.dart';
 import 'bloc/login_event.dart';
 
 class Page1 extends StatefulWidget {
