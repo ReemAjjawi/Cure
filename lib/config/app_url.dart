@@ -1,5 +1,5 @@
 class AppUrl {
-  static const String baseUrl = "http://199.192.19.220:8000/";
+  static const String baseUrl = "https://cure-app.webmyidea.com/";
   static const String subjects = "api/v1/subjects/by-codes";
   static const String lectures = "api/v1/lectures/get-by-subject/";
   static const String pdf = "api/v1/lectures/pdf-lectures/";

@@ -1,11 +1,9 @@
-
 import 'dart:convert';
 import 'package:hive/hive.dart';
 
 @HiveType(typeId: 0) // Ensure a unique typeId for each model
 
 class LectureModel {
-
   @HiveField(0)
   int id;
 

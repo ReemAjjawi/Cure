@@ -222,7 +222,7 @@ class _PdfAudioPageState extends State<PdfAudioPage> {
     }
     try {
       final url =
-          "http://199.192.19.220:8000/api/v1/lectures/audio-lectures/download/$id";
+          "https://cure-app.webmyidea.com/api/v1/lectures/audio-lectures/download/$id";
       print(url);
       print("id");
       print(id);
@@ -294,6 +294,10 @@ class _PdfAudioPageState extends State<PdfAudioPage> {
           ));
     } catch (e) {
       print("Error downloading audio: $e");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          duration: Duration(seconds: 3),
+          content: Text("فشل تنزيل الملف الصوتي")));
+      Navigator.pop(context);
     }
     return file;
   }
@@ -326,7 +330,12 @@ class _PdfAudioPageState extends State<PdfAudioPage> {
           body:
               BlocConsumer<LectureInformationBloc, GetInformationLectureState>(
             listener: (context, state) {
-              if (state is SuccessGet) {
+              if (state is FailureGet) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(state.message),
+                  duration: const Duration(seconds: 5),
+                ));
+              } else if (state is SuccessGet) {
                 if (state.xx.pdfLectureId == null &&
                     state.xx.pdfLectureDownloadLink == null &&
                     state.xx.audioLectureDownloadLink == null &&
@@ -730,7 +739,7 @@ class _PdfAudioPageState extends State<PdfAudioPage> {
                         ),
                 );
               } else if (state is FailureGet) {
-                return Text(state.message);
+                return const SizedBox();
               } else {
                 return const Padding(
                   padding: EdgeInsets.all(8.0),

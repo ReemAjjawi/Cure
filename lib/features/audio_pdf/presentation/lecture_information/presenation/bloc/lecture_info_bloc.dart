@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -23,10 +25,19 @@ class LectureInformationBloc
           print("lectueer connectivity");
           print("$ConnectivityResult");
           // No internet: fetch saved lectures for the subject from Hive
-          final savedInfoLectures =
-              await getSavedInfoLecture("${event.lectureId}".toString());
-          // Emit the cached data if found
-          emit(SuccessGet(xx: savedInfoLectures));
+          var box =
+              await Hive.openBox<LectureInformationModel>('lectureInfoBox');
+
+          final savedInfoLectures = box.get("${event.lectureId}".toString());
+          //  await getSavedInfoLecture("${event.lectureId}".toString());
+
+          if (savedInfoLectures != null) {
+            emit(SuccessGet(xx: savedInfoLectures));
+          } else {
+            emit(FailureGet(
+                message: "No internet and no saved lectures available."));
+          }
+
           print("lectueer connectivity");
         } else {
           SuccessSituation response =
@@ -46,15 +57,38 @@ class LectureInformationBloc
   }
 }
 
-Future<LectureInformationModel> getSavedInfoLecture(String lectureId) async {
-  final box = await Hive.openBox('lectureInfoBox');
-  final savedLectures =
-      box.get(lectureId, defaultValue: []) as LectureInformationModel;
-  return savedLectures; // Remove any null values
+Future<LectureInformationModel?> getSavedInfoLecture(String lectureId) async {
+  try {
+    var box = await Hive.openBox<List<dynamic>>('lectureInfoBox');
+    final savedLecture = box.get(lectureId, defaultValue: null);
+    print("Loaded ${savedLecture?.length ?? 0} lectures from Hive.");
+
+    if (savedLecture != null && savedLecture.isNotEmpty) {
+      return savedLecture.first
+          as LectureInformationModel; // Assuming the first item is the correct one
+    } else {
+      print("No lecture found for the given lectureId.");
+      return null;
+    }
+  } catch (e) {
+    print("Error accessing Hive: $e");
+    return null; // Return null in case of an error
+  }
 }
 
 Future<void> saveInfoLecture(
     String lectureId, LectureInformationModel lectureInfo) async {
-  final box = await Hive.openBox('lectureInfoBox');
-  await box.put(lectureId, lectureInfo);
+  try {
+    var box = await Hive.openBox<LectureInformationModel>('lectureInfoBox');
+    await box.put(lectureId, lectureInfo);
+
+    print(box.get('lectureInfoBox'));
+    log("=================================");
+    print("Saving lectureInfo to Hive.");
+    // await box.clear(); // Clear existing data
+    await box.close();
+    // await box.addAll(subjects);
+  } catch (e) {
+    print("Error saving subjects to Hive: $e");
+  }
 }

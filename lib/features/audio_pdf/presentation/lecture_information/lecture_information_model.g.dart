@@ -1,7 +1,10 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
-import 'package:hive_flutter/adapters.dart';
+part of 'lecture_information_model.dart';
 
-import '../../features/audio_pdf/presentation/lecture_information/lecture_information_model.dart';
+// **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
 
 class LectureInformationModelAdapter
     extends TypeAdapter<LectureInformationModel> {

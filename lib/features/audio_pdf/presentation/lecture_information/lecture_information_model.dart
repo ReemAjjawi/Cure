@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:hive_flutter/hive_flutter.dart';
+part 'lecture_information_model.g.dart';
 
 
 @HiveType(typeId: 2) // Ensure a unique typeId for each model

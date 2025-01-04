@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:hive_flutter/hive_flutter.dart';
 
-
 @HiveType(typeId: 1) // Unique typeId for this model
 class SubjectModel {
   @HiveField(0)
@@ -25,7 +24,6 @@ class SubjectModel {
     required this.countOfLectures,
   });
 
-
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
@@ -46,7 +44,8 @@ class SubjectModel {
 
   String toJson() => json.encode(toMap());
 
-  factory SubjectModel.fromJson(String source) => SubjectModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SubjectModel.fromJson(String source) =>
+      SubjectModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -56,19 +55,18 @@ class SubjectModel {
   @override
   bool operator ==(covariant SubjectModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.name == name &&
-      other.type == type &&
-      other.countOfLectures == countOfLectures;
+
+    return other.id == id &&
+        other.name == name &&
+        other.type == type &&
+        other.countOfLectures == countOfLectures;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      name.hashCode ^
-      type.hashCode ^
-      countOfLectures.hashCode;
+        name.hashCode ^
+        type.hashCode ^
+        countOfLectures.hashCode;
   }
 }

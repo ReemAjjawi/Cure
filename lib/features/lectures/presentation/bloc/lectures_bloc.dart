@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cure/config/handle_model.dart';
@@ -24,6 +26,7 @@ class LecturesBloc extends Bloc<LecturesEvent, LecturesState> {
           // No internet: fetch saved lectures for the subject from Hive
           final savedLectures =
               await getSavedLectures("${event.numberOfLecture}".toString());
+
           print("lectueer connectivity");
           if (savedLectures.isNotEmpty) {
             emit(LecturesList(lectures: savedLectures));
@@ -41,6 +44,7 @@ class LecturesBloc extends Bloc<LecturesEvent, LecturesState> {
 
             await saveLectures(
                 "${event.numberOfLecture}".toString(), response.data);
+
             print("t3bttttttttttttttttttttttttttttt");
             print(response.data);
             emit(LecturesList(lectures: response.data));
@@ -55,13 +59,30 @@ class LecturesBloc extends Bloc<LecturesEvent, LecturesState> {
 }
 
 Future<List<LectureModel>> getSavedLectures(String subjectId) async {
-  final box = await Hive.openBox('lecturesBox');
-  final savedLectures =
-      box.get(subjectId, defaultValue: []) as List<LectureModel>;
-  return savedLectures; // Remove any null values
+  try {
+    var box = await Hive.openBox<List<dynamic>>(
+        'lecturesBox'); // Open box with dynamic type
+    final savedLectures = box.get(subjectId, defaultValue: []);
+    print("Loaded ${savedLectures?.length ?? 0} subjects from Hive.");
+    return (savedLectures ?? []).map((e) => e as LectureModel).toList();
+  } catch (e) {
+    print("Error accessing Hive: $e");
+    return [];
+  }
 }
 
 Future<void> saveLectures(String subjectId, List<LectureModel> lectures) async {
-  final box = await Hive.openBox('lecturesBox');
-  await box.put(subjectId, lectures);
+  try {
+    var box = await Hive.openBox<List<LectureModel>>('lecturesBox');
+    await box.put(subjectId, lectures);
+
+    print(box.get('subjects'));
+    log("=================================");
+    print("Saving ${lectures.length} subjects to Hive.");
+    // await box.clear(); // Clear existing data
+    await box.close();
+    // await box.addAll(subjects);
+  } catch (e) {
+    print("Error saving subjects to Hive: $e");
+  }
 }

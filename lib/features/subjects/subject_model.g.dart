@@ -1,9 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+import 'package:hive_flutter/adapters.dart';
 
-//part of 'subject_model.dart';
-import 'package:hive/hive.dart';
+import 'subject_model.dart';
 
-import '../../features/subjects/subject_model.dart';
+// **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
 
 class SubjectModelAdapter extends TypeAdapter<SubjectModel> {
   @override
@@ -13,7 +16,7 @@ class SubjectModelAdapter extends TypeAdapter<SubjectModel> {
   SubjectModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
-      for (var i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SubjectModel(
       id: fields[0] as int,

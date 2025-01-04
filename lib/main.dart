@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'config/bloc_observe_config.dart';
-import 'core/adapters/lecture_information_model_adapter.dart';
-import 'core/adapters/lecture_model_adapter.dart';
-import 'core/adapters/subject_model_adapter.dart';
+import 'features/audio_pdf/presentation/lecture_information/lecture_information_model.dart';
+import 'features/lectures/lecture_model.g.dart';
 import 'features/subjects/presentation/view.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+
+import 'features/subjects/subject_model.g.dart';
 
 final box = Hive.box('projectBox');
 late final String? token;
@@ -18,11 +19,12 @@ void main() async {
   deviceId = await getAndroidId(); // Fetch the Android ID during initialization
   await Hive.initFlutter();
   await Hive.openBox('projectBox');
+  Hive.registerAdapter(SubjectModelAdapter()); // Register the adapter
+
   Hive.registerAdapter(LectureModelAdapter()); // Register the adapter
 
-  Hive.registerAdapter(SubjectModelAdapter()); // Register the adapter
-  Hive.registerAdapter(LectureInformationModelAdapter()); // Register your adapter
-
+  Hive.registerAdapter(
+      LectureInformationModelAdapter()); // Register your adapter
 
   runApp(const MyApp());
 }
