@@ -32,7 +32,16 @@ class SubjectServiceImp extends SubjectService {
 
       print("subjects");
       print(subjects);
-      return DataSuccessList<SubjectModel>(data: subjects);
+
+         if (response.statusCode == 200 || response.statusCode == 201) {
+                return DataSuccessList<SubjectModel>(data: subjects);
+
+      }
+      else{
+  
+        throw Exception(" try again later.");
+      
+      }
     } on DioException catch (e) {
       print("error");
       rethrow;
@@ -59,101 +68,5 @@ class SubjectServiceImp extends SubjectService {
     }
   }
 
-//   @override
-//   Future<SuccessSituation> addCodeToUser(String code)async {
 
-//  try {
-
-//       response = await dio.post(AppUrl.baseUrl + AppUrl.addCodeToUser,
-//           options: HeaderConfig.getHeader(useToken: true),
-//           data: code);
-//       return DataSuccessObject<LectureModel>(data: lec);
-//     }
-
-//     on DioException catch (e) {
-//       throw e;
-//     }
-//   }
-
-  // }
 }
-
-//   @override
-//   Future<SuccessSituation> createNewAniml(String name) async {
-//     try {
-//       response = await dio.post(baseurl, data: {"name": name});
-//       AnimalModel animalModel = AnimalModel.fromMap(response.data);
-//       return animalModel;
-//     } catch (e) {
-//       print(e);
-//       return ExceptionModel();
-//     }
-//   }
-
-
-//   @override
-//       Future<SuccessSituation> getSubjectById(int id) async {
-//     print(
-//         '${AppUrl.baseUrl}/${AppUrl.getBicyclesByCategory}?category=$categoryName');
-
-//     print("hiiiii");
-//     try {
-//       Response response = await dio.get(
-//           '${AppUrl.baseUrl}/${AppUrl.getBicyclesByCategory}?category=$categoryName',
-//           options: HeaderConfig.getHeader(useToken: true));
-//       print("hiiiii");
-//       List<BicycleModel> bicycles = List.generate(
-//         response.data['body'].length,
-//         (index) => BicycleModel.fromJson(response.data['body'][index]),
-//       );
-//       // List<BicycleEntity> bicycle =
-//       //     bicycles.map<BicycleEntity>((bicycle) => bicycle).toList();
-//       return DataSuccessList(data: bicycles);
-//        } on DioException catch (e) {
-//       throw ServerException(message: "try again");
-//     }
-   
-  
-//     }
-     
-
-
-//   Future <SuccessSituation> deleteSubject(int id)async{
-// try { 
-//   response = await dio.delete(baseurl);
-// } catch (e) {
-//   print(e); 
-// }
-//   }
-
-
-
-
-
-
-
-  
-
-// }
-
-
-
-
-
-  // if (response.statusCode == 200) {
-       
-  //       List<BicycleListModel> bicycles = List.generate(
-  //         response.data['body']['bicycleList'].length,
-  //         (index) => BicycleListModel.fromJson(
-  //             response.data['body']['bicycleList'][index]),
-  //       );
-  //       return DataSuccessList(data: bicycles);
-  //     }
-  //   } on DioException catch (e) {
-  //         String? message = e.response?.data['message'];
-  //   print("iam in catch");
-  //   print(e.response?.data);
-
-  //     if (message == 'Username already in use') {
-
-  

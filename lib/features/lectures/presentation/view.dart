@@ -55,7 +55,7 @@ class Lectures extends StatelessWidget {
                   if (state is LecturesLoading) {
                     return const Indicator();
                   } else if (state is FailureLecturesState) {
-                    return Text(state.message);
+                    return const Text("");
                   } else {
                     return Expanded(
                       child: ListView.builder(
@@ -71,52 +71,58 @@ class Lectures extends StatelessWidget {
                                 },
                               ));
                             },
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Container(
-                                height: screenHeight / 9,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(9),
-                                  border: Border.all(
-                                      color: const Color(0xFF749081),
-                                      width: 0.5),
-                                ),
-                                child: ListTile(
-                                  leading: Icon(Icons.download_outlined,
-                                      size: 31,
-                                      color: ColorsManager.primaryColor),
-                                  title: Text(
-                                    (state).lectures[index].name,
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: ColorsManager.primaryColor,
-                                    ),
-                                  ),
-                                  subtitle: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left: screenWidth * 0.09),
-                                          child: Text("ميغا",
-                                              style: TextStyle(
-                                                  color:
-                                                      ColorsManager.grayColor)),
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    child: Container(
+                                      //      height: screenHeight / 9,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(9),
+                                        border: Border.all(
+                                            color: const Color(0xFF749081),
+                                            width: 0.5),
+                                      ),
+                                      child: ListTile(
+                                        leading: Icon(Icons.download_outlined,
+                                            size: 31,
+                                            color: ColorsManager.primaryColor),
+                                        title: Text(
+                                          (state).lectures[index].name,
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: ColorsManager.primaryColor,
+                                          ),
                                         ),
-                                        const Spacer(),
-                                        Text(" ساعات",
-                                            style: TextStyle(
-                                                color:
-                                                    ColorsManager.grayColor)),
-                                      ],
+                                        subtitle: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: screenWidth * 0.09),
+                                                child: Text("ميغا",
+                                                    style: TextStyle(
+                                                        color: ColorsManager
+                                                            .grayColor)),
+                                              ),
+                                              const Spacer(),
+                                              Text(" ساعات",
+                                                  style: TextStyle(
+                                                      color: ColorsManager
+                                                          .grayColor)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                           );
                         },

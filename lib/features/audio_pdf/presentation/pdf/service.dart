@@ -20,12 +20,27 @@ class PdfServiceImp extends PdfService {
     try {
       final response = await dio.get("${AppUrl.baseUrl}${AppUrl.pdf}$id",
           options: HeaderConfig.getHeader(useToken: true));
-      print("${AppUrl.baseUrl}${AppUrl.pdf}$id");
+     
+
+ if (response.statusCode == 200 || response.statusCode == 201) {
+   print("${AppUrl.baseUrl}${AppUrl.pdf}$id");
       print(response.statusCode);
       print(response.data);
       PdfModel pdfs = PdfModel.fromMap(response.data);
       print(pdfs);
-      return DataSuccessObject<PdfModel>(data: pdfs);
+            return DataSuccessObject<PdfModel>(data: pdfs);
+
+
+      }
+      else {
+      
+        // Throw an exception when a 404 error occurs
+        throw Exception("try again later.");
+      
+      }
+
+
+      
     } on DioException catch (e) {
       rethrow;
     }

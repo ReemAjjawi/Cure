@@ -186,7 +186,7 @@ class _SubjectsState extends State<Subjects> {
                         ),
                       );
                     } else if (state is FailureSubjectsState) {
-                      return Text(state.message);
+                      return Text("");
                     } else {
                       return const SizedBox();
                     }

@@ -1,6 +1,6 @@
 part of 'subjects_bloc.dart';
 
-@immutable
+
 sealed class SubjectsState {}
 
 final class SubjectsLoading extends SubjectsState {}

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:hive/hive.dart';
+part 'lecture_model.g.dart';
 
 @HiveType(typeId: 0) // Ensure a unique typeId for each model
 

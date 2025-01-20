@@ -18,20 +18,24 @@ class LectureServiceImp extends LectureService {
   @override
   Future<DataSuccessList<LectureModel>> getLectures(int numOfSubject) async {
     try {
-      print("svghjj");
-      print('${AppUrl.baseUrl}+${AppUrl.lectures}$numOfSubject');
-      print(numOfSubject);
+ 
       response = await dio.get(
           '${AppUrl.baseUrl}${AppUrl.lectures}$numOfSubject',
           options: HeaderConfig.getHeader(useToken: true));
       print('${AppUrl.baseUrl}+${AppUrl.lectures}+$numOfSubject');
-      List<LectureModel> lectures = List.generate(
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+              List<LectureModel> lectures = List.generate(
         response.data.length,
         (index) => LectureModel.fromMap(response.data[index]),
       );
-      return DataSuccessList<LectureModel>(data: lectures);
+        return DataSuccessList<LectureModel>(data: lectures);
+      } else {
+        throw Exception(
+        "Failed to fetch Lecture");
+      }
     } on DioException catch (e) {
       rethrow;
-    }
+    } 
   }
 }

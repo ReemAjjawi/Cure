@@ -25,13 +25,14 @@ class LectureInformationModelAdapter
       audioLectureDownloadLink: fields[4] as String?,
       pdfLectureId: fields[5] as int?,
       pdfLectureDownloadLink: fields[6] as String?,
+      audioFileSize: fields[7] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, LectureInformationModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -45,7 +46,9 @@ class LectureInformationModelAdapter
       ..writeByte(5)
       ..write(obj.pdfLectureId)
       ..writeByte(6)
-      ..write(obj.pdfLectureDownloadLink);
+      ..write(obj.pdfLectureDownloadLink)
+      ..writeByte(7)
+      ..write(obj.audioFileSize);
   }
 
   @override

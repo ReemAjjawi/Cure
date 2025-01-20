@@ -27,9 +27,23 @@ class LectureServiceInfoImp extends LectureService {
           options: HeaderConfig.getHeader(useToken: true));
       print(response.statusCode);
       print("hi");
+
+
+ if (response.statusCode == 200 || response.statusCode == 201) {
+ 
+      
       LectureInformationModel lectureInfo =
           LectureInformationModel.fromMap(response.data);
       return DataSuccessObject<LectureInformationModel>(data: lectureInfo);
+
+      }
+      else {
+      
+        // Throw an exception when a 404 error occurs
+        throw Exception("try again later.");
+      
+      }
+
     } on DioException catch (e) {
       throw e;
     }

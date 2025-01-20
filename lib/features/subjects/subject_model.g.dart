@@ -1,12 +1,10 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-import 'package:hive_flutter/adapters.dart';
 
-import 'subject_model.dart';
+part of 'subject_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
-
 
 class SubjectModelAdapter extends TypeAdapter<SubjectModel> {
   @override

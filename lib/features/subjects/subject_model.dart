@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:hive_flutter/hive_flutter.dart';
+part 'subject_model.g.dart';
 
 @HiveType(typeId: 1) // Unique typeId for this model
 class SubjectModel {

@@ -70,7 +70,11 @@ class PdfBloc extends Bloc<PdfEvent, PdfState> {
         }
       } on DioException catch (e) {
         print(e);
-        emit(FailurePdfState(message: e.message!));
+        emit(FailurePdfState(message: "Error Occured When Fetch Lecture"));
+      }
+      catch (e) {
+        print("Unexpected error: $e");
+        emit(FailurePdfState(message: "An unexpected error occurred."));
       }
     });
   }

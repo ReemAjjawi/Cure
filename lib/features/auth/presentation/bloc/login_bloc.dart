@@ -20,10 +20,15 @@ class LoginBloc extends Bloc<LogInClassEvent, LogInClassState> {
         if (token != null && token.isNotEmpty) {
           emit(LogInSuccessState());
         } else {
-          emit(LogInFailureState(message: "Token is empty or null."));
+          print(token);
+          print("==========================");
         }
       } on DioException catch (e) {
-        emit(LogInFailureState(message: e.message!));
+        emit(LogInFailureState(message: "The Code is Taken or Mobile Number is not Correct"!));
+      }
+      catch (e) {
+        print("Unexpected error: $e");
+        emit(LogInFailureState(message: "An unexpected error occurred."));
       }
     });
   }

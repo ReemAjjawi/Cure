@@ -1,9 +1,14 @@
-import 'package:hive/hive.dart';
-import 'lecture_model.dart';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'lecture_model.dart';
+
+// **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
 
 class LectureModelAdapter extends TypeAdapter<LectureModel> {
   @override
-  final int typeId = 0; // يجب أن يتطابق مع typeId في @HiveType
+  final int typeId = 0;
 
   @override
   LectureModel read(BinaryReader reader) {
@@ -21,7 +26,7 @@ class LectureModelAdapter extends TypeAdapter<LectureModel> {
   @override
   void write(BinaryWriter writer, LectureModel obj) {
     writer
-      ..writeByte(3) // عدد الحقول
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)

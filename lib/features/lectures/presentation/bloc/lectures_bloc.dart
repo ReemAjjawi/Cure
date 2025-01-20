@@ -23,7 +23,6 @@ class LecturesBloc extends Bloc<LecturesEvent, LecturesState> {
         if (connectivityResult.contains(ConnectivityResult.none)) {
           print("lectueer connectivity");
           print("$ConnectivityResult");
-          // No internet: fetch saved lectures for the subject from Hive
           final savedLectures =
               await getSavedLectures("${event.numberOfLecture}".toString());
 
@@ -35,24 +34,23 @@ class LecturesBloc extends Bloc<LecturesEvent, LecturesState> {
                 message: "No internet and no saved lectures available."));
           }
         } else {
-          // Internet is available: fetch lectures from the server
           SuccessSituation response =
               await LectureServiceImp().getLectures(event.numberOfLecture);
 
           if (response is DataSuccessList<LectureModel>) {
-            // Save lectures to Hive for the given subject
-
             await saveLectures(
                 "${event.numberOfLecture}".toString(), response.data);
 
-            print("t3bttttttttttttttttttttttttttttt");
-            print(response.data);
             emit(LecturesList(lectures: response.data));
+          } else {
+            emit(FailureLecturesState(message: "Failed to fetch lectures."));
           }
         }
       } on DioException catch (e) {
-        emit(FailureLecturesState(
-            message: e.message ?? "Failed to fetch lectures."));
+        emit(FailureLecturesState(message: "Failed to fetch lectures."));
+      } catch (e) {
+        print("Unexpected error: $e");
+        emit(FailureLecturesState(message: "Failed to fetch lectures."));
       }
     });
   }
@@ -60,11 +58,13 @@ class LecturesBloc extends Bloc<LecturesEvent, LecturesState> {
 
 Future<List<LectureModel>> getSavedLectures(String subjectId) async {
   try {
-    var box = await Hive.openBox<List<dynamic>>(
-        'lecturesBox'); // Open box with dynamic type
-    final savedLectures = box.get(subjectId, defaultValue: []);
-    print("Loaded ${savedLectures?.length ?? 0} subjects from Hive.");
-    return (savedLectures ?? []).map((e) => e as LectureModel).toList();
+    var box =
+        await Hive.openBox<List>('lecturesBox'); // Open box with dynamic type
+
+    final savedLectures =
+        box.get(subjectId, defaultValue: [])!.cast<LectureModel>();
+    print("Loaded ${savedLectures.length ?? 0} subjects from Hive.");
+    return savedLectures;
   } catch (e) {
     print("Error accessing Hive: $e");
     return [];
@@ -76,7 +76,7 @@ Future<void> saveLectures(String subjectId, List<LectureModel> lectures) async {
     var box = await Hive.openBox<List<LectureModel>>('lecturesBox');
     await box.put(subjectId, lectures);
 
-    print(box.get('subjects'));
+    print(box.get(subjectId));
     log("=================================");
     print("Saving ${lectures.length} subjects to Hive.");
     // await box.clear(); // Clear existing data

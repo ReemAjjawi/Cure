@@ -38,6 +38,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.6
+  flutter_launcher_icons: ^0.13.1
   flutter_pdfview: ^1.3.4
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
@@ -47,6 +48,13 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/cure_logo.png" # Path to your icon file
+  adaptive_icon_background: "#FFFFFF"   # Optional: Background color for Android adaptive icons
+  adaptive_icon_foreground: "assets/icons/cure_logo.png" # Optional for a
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -59,7 +67,7 @@ flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/music/simple-logo-149190.mp3
+    - assets/icons/cure_logo.png
     - assets/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

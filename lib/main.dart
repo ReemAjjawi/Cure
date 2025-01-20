@@ -4,11 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'config/bloc_observe_config.dart';
 import 'features/audio_pdf/presentation/lecture_information/lecture_information_model.dart';
-import 'features/lectures/lecture_model.g.dart';
+import 'features/lectures/lecture_model.dart';
 import 'features/subjects/presentation/view.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
-import 'features/subjects/subject_model.g.dart';
+import 'features/subjects/subject_model.dart';
+
 
 final box = Hive.box('projectBox');
 late final String? token;
@@ -58,3 +59,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+

@@ -23,33 +23,33 @@ class SubjectsBloc extends Bloc<SubjectsEvent, SubjectsState> {
 
         if (connectivityResult.contains(ConnectivityResult.none)) {
           print("No internet connection, fetching saved subjects.");
-          // Fetch saved subjects from Hive
-          var box = await Hive.openBox<List<SubjectModel>>('subjectsBox');
 
-          final savedSubjects = box.get("subjects");
-          if (savedSubjects!.isNotEmpty) {
-            print(
-                "Fetched ${savedSubjects.length} subjects from local storage.");
-            emit(SubjectsList(subjects: savedSubjects));
-          } else {
-            emit(FailureSubjectsState(
-                message: "No internet and no saved subjects available."));
-          }
+          log("---------------------------------------");
+          final savedSubjects = await getSavedSubjects();
+
+          emit(SubjectsList(subjects: savedSubjects));
         } else {
-          // Internet is available, fetch subjects from the server
-          print("Fetching subjects from the server...");
           SuccessSituation response = await SubjectServiceImp().getSubjects();
           if (response is DataSuccessList<SubjectModel>) {
             print("Fetched ${response.data.length} subjects from the server.");
-            // Save subjects to Hive
             await saveSubjects(response.data);
             emit(SubjectsList(subjects: response.data));
           }
+          else{
+                emit(FailureSubjectsState(
+            message: "Failed to fetch subjects."));
+ 
+          }
         }
+
       } on DioException catch (e) {
         print("DioException: ${e.message}");
         emit(FailureSubjectsState(
-            message: e.message ?? "Failed to fetch subjects."));
+            message: "Failed to fetch subjects."));
+      }
+      catch (e) {
+        print("Unexpected error: $e");
+        emit(FailureSubjectsState(message: "An unexpected error occurred."));
       }
     });
 
@@ -62,9 +62,13 @@ class SubjectsBloc extends Bloc<SubjectsEvent, SubjectsState> {
         if (response) {
           emit(SuccessAddCode());
         }
+        else{
+           emit(FailureSubjectsState(message: "Failed to add code, The Code is Taken or Code is not Correct"));
+    
+        }
       } on DioException catch (e) {
         print("DioException: ${e.message}");
-        emit(FailureSubjectsState(message: e.message ?? "Failed to add code."));
+        emit(FailureSubjectsState(message: "Failed to add code, The Code is Taken or Code is not Correct"));
       } catch (e) {
         print("Unexpected error: $e");
         emit(FailureSubjectsState(message: "An unexpected error occurred."));
@@ -75,11 +79,12 @@ class SubjectsBloc extends Bloc<SubjectsEvent, SubjectsState> {
 
 Future<List<SubjectModel>> getSavedSubjects() async {
   try {
-    var box = await Hive.openBox<List<dynamic>>(
-        'subjectsBox'); // Open box with dynamic type
-    final savedSubjects = box.get('subjects', defaultValue: []);
-    print("Loaded ${savedSubjects?.length ?? 0} subjects from Hive.");
-    return (savedSubjects ?? []).map((e) => e as SubjectModel).toList();
+    var box =
+        await Hive.openBox<List>('subjectsBox'); // Open box with dynamic type
+    final savedSubjects =
+        box.get('subjects', defaultValue: [])!.cast<SubjectModel>();
+    return savedSubjects;
+    // return (savedSubjects ?? []).map((e) => e as SubjectModel).toList();
   } catch (e) {
     print("Error accessing Hive: $e");
     return [];
@@ -90,12 +95,11 @@ Future<void> saveSubjects(List<SubjectModel> subjects) async {
   try {
     var box = await Hive.openBox<List<SubjectModel>>('subjectsBox');
     await box.put("subjects", subjects);
+    log("=================================");
 
     print(box.get('subjects'));
-    log("=================================");
     print("Saving ${subjects.length} subjects to Hive.");
-    // await box.clear(); // Clear existing data
-    // await box.addAll(subjects);
+
     await box.close();
   } catch (e) {
     print("Error saving subjects to Hive: $e");

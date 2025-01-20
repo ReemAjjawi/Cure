@@ -29,6 +29,7 @@ class LectureInformationBloc
               await Hive.openBox<LectureInformationModel>('lectureInfoBox');
 
           final savedInfoLectures = box.get("${event.lectureId}".toString());
+          //!.cast<LectureInformationModel>();
           //  await getSavedInfoLecture("${event.lectureId}".toString());
 
           if (savedInfoLectures != null) {
@@ -51,7 +52,11 @@ class LectureInformationBloc
           }
         }
       } on DioException catch (e) {
-        emit(FailureGet(message: e.message!));
+        emit(FailureGet(message: "There is no Any Audio or Pdf Here"));
+      }
+      catch (e) {
+        print("Unexpected error: $e");
+        emit(FailureGet(message: "An unexpected error occurred."));
       }
     });
   }
